@@ -2,6 +2,7 @@ package contracts
 
 import (
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -13,10 +14,10 @@ type Server struct {
 func NewServer(port, path string) *Server {
 	m := http.NewServeMux()
 	m.Handle("/contracts/",
-		http.StripPrefix("/contracts/", http.FileServer(http.Dir(path))))
+		http.StripPrefix("/contracts/", noDirectoryListing(http.FileServer(http.Dir(path)))))
 
 	s := &http.Server{
-		Addr:         "0.0.0.0:" + port,
+		Addr:         "127.0.0.1:" + port,
 		Handler:      m,
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 5 * time.Second,
@@ -26,4 +27,15 @@ func NewServer(port, path string) *Server {
 		S:    s,
 		path: path,
 	}
+}
+
+func noDirectoryListing(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if strings.HasSuffix(r.URL.Path, "/") {
+			http.NotFound(w, r)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
 }
