@@ -16,7 +16,7 @@ func main() {
 	}
 	port, ok = os.LookupEnv("CONTRACTS_PORT")
 	if !ok {
-		port = "8083"
+		port = "8084"
 	}
 	s := contracts.NewServer(port, path)
 
