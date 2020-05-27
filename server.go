@@ -6,15 +6,17 @@ import (
 	"time"
 )
 
+// Server represents the HTTP file server
 type Server struct {
 	S    *http.Server
 	path string
 }
 
+// NewServer returns a configured server
 func NewServer(port, path string) *Server {
 	m := http.NewServeMux()
 	m.Handle("/contracts/",
-		http.StripPrefix("/contracts/", noDirectoryListing(http.FileServer(http.Dir(path)))))
+		http.StripPrefix("/contracts", noDirectoryListing(http.FileServer(http.Dir(path)))))
 
 	s := &http.Server{
 		Addr:         "127.0.0.1:" + port,
