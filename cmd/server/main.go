@@ -1,7 +1,7 @@
 package main
 
 import (
-	contracts "iboks-contracts"
+	contracts "github.com/torfjor/iboks-contracts"
 	"log"
 	"os"
 )
@@ -12,7 +12,7 @@ func main() {
 
 	path, ok := os.LookupEnv("CONTRACTS_PATH")
 	if !ok {
-		log.Fatal("CONTRACTS_PATH not found in environment")
+		path = "C:\\SpaceMan32\\Contracts"
 	}
 	port, ok = os.LookupEnv("CONTRACTS_PORT")
 	if !ok {
